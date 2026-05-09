@@ -22,6 +22,8 @@ streamlit run app.py
 
 The app looks for `full_data.parquet` in the repository root by default. You can also upload a parquet, CSV, TSV, or Excel file from the sidebar. Local datasets are ignored by default so source code can be published without uploading private or oversized market data.
 
+The Streamlit uploader is configured for files up to 1000MB, which supports the local `full_data.parquet` dataset used during development.
+
 ## Data Expectations
 
 The dashboard works best with daily OHLCV data. Column names are auto-detected when they resemble:
