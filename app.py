@@ -22,7 +22,9 @@ from stock_dashboard.metrics import compute_kpis, format_money, format_number, f
 from stock_dashboard.reporting import build_markdown_report
 
 
-DEFAULT_DATA_PATH = Path("full_data.parquet")
+FULL_DATA_PATH = Path("full_data.parquet")
+SAMPLE_DATA_PATH = Path("data/sample_prices.csv")
+DEFAULT_DATA_PATH = FULL_DATA_PATH if FULL_DATA_PATH.exists() else SAMPLE_DATA_PATH
 
 
 st.set_page_config(
@@ -127,9 +129,24 @@ def source_columns(uploaded_file, local_path: Path) -> tuple[list[str], pd.DataF
 
 with st.sidebar:
     st.header("Data")
-    uploaded = st.file_uploader("Dataset", type=["parquet", "pq", "csv", "tsv", "xlsx", "xls"])
-    path_value = st.text_input("Local path", value=str(DEFAULT_DATA_PATH) if DEFAULT_DATA_PATH.exists() else "")
-    local_path = Path(path_value) if path_value else DEFAULT_DATA_PATH
+    source_options = []
+    if SAMPLE_DATA_PATH.exists():
+        source_options.append("Bundled sample")
+    source_options.extend(["Local path", "Upload file"])
+    default_source = "Local path" if FULL_DATA_PATH.exists() else source_options[0]
+    source_mode = st.radio("Source", source_options, index=source_options.index(default_source))
+
+    uploaded = None
+    if source_mode == "Upload file":
+        st.caption("For Streamlit Cloud, avoid uploading very large raw datasets. Use the bundled sample or run locally.")
+        uploaded = st.file_uploader("Dataset", type=["parquet", "pq", "csv", "tsv", "xlsx", "xls"])
+        local_path = DEFAULT_DATA_PATH
+    elif source_mode == "Bundled sample":
+        local_path = SAMPLE_DATA_PATH
+        st.caption("Cloud-ready sample: AAPL, AMZN, GOOGL, META, MSFT, NVDA, TSLA.")
+    else:
+        path_value = st.text_input("Local path", value=str(DEFAULT_DATA_PATH) if DEFAULT_DATA_PATH.exists() else "")
+        local_path = Path(path_value) if path_value else DEFAULT_DATA_PATH
 
 try:
     columns, uploaded_or_loaded_df = source_columns(uploaded, local_path)

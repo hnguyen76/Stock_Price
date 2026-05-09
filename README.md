@@ -20,9 +20,9 @@ pip install -r requirements.txt
 streamlit run app.py
 ```
 
-The app looks for `full_data.parquet` in the repository root by default. You can also upload a parquet, CSV, TSV, or Excel file from the sidebar. Local datasets are ignored by default so source code can be published without uploading private or oversized market data.
+On Streamlit Cloud, the app opens with a bundled sample dataset covering AAPL, AMZN, GOOGL, META, MSFT, NVDA, and TSLA. When running locally, the app looks for `full_data.parquet` in the repository root by default. You can also load a local path or upload a parquet, CSV, TSV, or Excel file from the sidebar.
 
-The Streamlit uploader is configured for files up to 1000MB, which supports the local `full_data.parquet` dataset used during development.
+Local datasets are ignored by default so source code can be published without uploading private or oversized market data. Although the Streamlit uploader is configured for files up to 1000MB, uploading a 627MB parquet file can still exceed Community Cloud memory during parsing. For the full dataset, run locally or publish the data through a dedicated storage path.
 
 ## Data Expectations
 
