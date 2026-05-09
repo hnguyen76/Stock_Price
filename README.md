@@ -1,4 +1,5 @@
 # Stock Forecast Intelligence
+https://stock-forecast-hnguyen76.streamlit.app/
 
 Professional Streamlit dashboard for stock price analysis, scenario forecasting, risk review, and downloadable research notes.
 
